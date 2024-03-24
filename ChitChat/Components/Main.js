@@ -5,11 +5,21 @@ import Chats from "./Chats";
 import Groups from "./Groups";
 import Status from "./Status";
 import Options from "./Options";
+import Chat from "./Chat";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+
+const Stack = createStackNavigator();
 
 const Tab = createMaterialTopTabNavigator();
+
+const ListOfChats = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Chats" component={Chats} />
+    <Stack.Screen name="Chat" component={Chat} />
+  </Stack.Navigator>
+);
 
 const Main = () => {
   return (
@@ -18,7 +28,7 @@ const Main = () => {
         <View>
           <Text style={{ color: "#E5E4E2" }}>Hello,</Text>
           <Text style={{ color: "white", fontSize: 25, fontWeight: "600" }}>
-            Moin
+            MoinKhan07
           </Text>
         </View>
         <View style={styles.iconsView}>
@@ -34,16 +44,14 @@ const Main = () => {
           </Pressable>
         </View>
       </View>
-      <NavigationContainer>
-        <Tab.Navigator
-          tabBar={(props) => <Options {...props} />}
-          screenOptions={{ swipeEnabled: false }}
-        >
-          <Tab.Screen name="Chats" component={Chats} />
-          <Tab.Screen name="Groups" component={Groups} />
-          <Tab.Screen name="Status" component={Status} />
-        </Tab.Navigator>
-      </NavigationContainer>
+      <Tab.Navigator
+        tabBar={(props) => <Options {...props} />}
+        screenOptions={{ swipeEnabled: false }}
+      >
+        <Tab.Screen name="ListOfChats" component={ListOfChats} />
+        <Tab.Screen name="Groups" component={Groups} />
+        <Tab.Screen name="Status" component={Status} />
+      </Tab.Navigator>
     </View>
   );
 };

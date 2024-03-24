@@ -7,13 +7,21 @@ import {
   Pressable,
 } from "react-native";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const Chats = () => {
+  const navigation = useNavigation();
+  const handleChatPress = () => {
+    navigation.navigate("Chat");
+  };
   const name = "Sultan Osman Gazi";
   const message = "Kya haal hai bhai bahut din ho gaye mile kab mil rahe ho";
   return (
     <ScrollView style={styles.chatsView}>
-      <Pressable style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1 }]}>
+      <Pressable
+        onPress={handleChatPress}
+        style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1 }]}
+      >
         <View style={styles.chat}>
           <View style={styles.chatDp}>
             <Image
@@ -23,7 +31,7 @@ const Chats = () => {
               style={{
                 width: "80%",
                 height: "80%",
-                borderRadius: "50%",
+                borderRadius: 50,
               }}
             />
           </View>
@@ -31,7 +39,7 @@ const Chats = () => {
             <Text
               style={{
                 color: "white",
-                fontSize: 16,
+                fontSize: 17,
                 fontWeight: "600",
               }}
             >
@@ -68,13 +76,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   chatDp: {
-    width: "20%",
+    width: "22%",
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
   chatName: {
-    width: "56%",
+    width: "55%",
     height: "100%",
     padding: 8,
   },

@@ -8,7 +8,17 @@ import {
 } from "react-native";
 import React from "react";
 
+import { useNavigation } from "@react-navigation/native";
+
 const Register = () => {
+  const navigation = useNavigation();
+
+  const handleRegister = () => {
+    navigation.navigate("Login");
+  };
+  const handleNavigateToLogin = () => {
+    navigation.navigate("Login");
+  };
   return (
     <View style={styles.registerMain}>
       <Image style={styles.logo} source={require("../assets/icon.png")} />
@@ -42,6 +52,7 @@ const Register = () => {
             styles.registerPressable,
             { opacity: pressed ? 0.8 : 1 },
           ]}
+          onPress={handleRegister}
         >
           <View style={styles.registerBtn}>
             <Text style={{ fontSize: 18, color: "#3578C1" }}>Register</Text>
@@ -51,6 +62,7 @@ const Register = () => {
           style={({ pressed }) => [
             { opacity: pressed ? 0.8 : 1, width: "100%" },
           ]}
+          onPress={handleNavigateToLogin}
         >
           <Text
             style={{ color: "#E5E4E2", textAlign: "center", marginTop: 20 }}

@@ -7,8 +7,17 @@ import {
   Image,
 } from "react-native";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const Login = () => {
+  const navigation = useNavigation();
+
+  const handleLogin = () => {
+    navigation.navigate("Main");
+  };
+  const handleNavigateToRegister = () => {
+    navigation.navigate("Register");
+  };
   return (
     <View style={styles.loginMain}>
       <Image style={styles.logo} source={require("../assets/icon.png")} />
@@ -30,6 +39,7 @@ const Login = () => {
             styles.loginPressable,
             { opacity: pressed ? 0.8 : 1 },
           ]}
+          onPress={handleLogin}
         >
           <View style={styles.loginBtn}>
             <Text style={{ fontSize: 18, color: "#3578C1" }}>Login</Text>
@@ -39,6 +49,7 @@ const Login = () => {
           style={({ pressed }) => [
             { opacity: pressed ? 0.8 : 1, width: "100%" },
           ]}
+          onPress={handleNavigateToRegister}
         >
           <Text
             style={{ color: "#E5E4E2", textAlign: "center", marginTop: 20 }}
