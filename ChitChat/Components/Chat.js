@@ -163,16 +163,21 @@ const styles = StyleSheet.create({
   messageContainer: {
     maxWidth: "60%",
     marginVertical: 5,
-    borderRadius: 10,
-    padding: 10,
+    padding: 8,
   },
   senderMessage: {
     alignSelf: "flex-end",
     backgroundColor: "white",
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
   receiverMessage: {
     alignSelf: "flex-start",
     backgroundColor: "#62abfc",
+    borderTopRightRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
   messageText: {
     fontSize: 16,
