@@ -13,7 +13,7 @@ const Login = () => {
   const navigation = useNavigation();
 
   const handleLogin = () => {
-    navigation.navigate("Main");
+    navigation.navigate("MainStackScreen");
   };
   const handleNavigateToRegister = () => {
     navigation.navigate("Register");

@@ -14,7 +14,7 @@ const Chats = () => {
   const handleChatPress = () => {
     navigation.navigate("Chat");
   };
-  const name = "Sultan Osman Gazi";
+  const name = "Moin Khan";
   const message = "Kya haal hai bhai bahut din ho gaye mile kab mil rahe ho";
   return (
     <ScrollView style={styles.chatsView}>
@@ -26,7 +26,7 @@ const Chats = () => {
           <View style={styles.chatDp}>
             <Image
               source={{
-                uri: "https://i.pinimg.com/736x/f4/1a/13/f41a13df2d4223576900d55a456093d4.jpg",
+                uri: "https://avatars.githubusercontent.com/u/99876741?s=400&u=85779b613746610d52f094672a66566f37aca024&v=4",
               }}
               style={{
                 width: "80%",

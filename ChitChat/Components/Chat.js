@@ -7,12 +7,18 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
 } from "react-native";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 
 const Chat = () => {
-  const name = "Sultan Osman Gazi";
+  const navigation = useNavigation();
+  const navigateBack = () => {
+    navigation.navigate("Chats");
+  };
+  const name = "Moin Khan";
   const messages = [
     { text: "Hello!", sender: true },
     { text: "Hi there!", sender: false },
@@ -35,13 +41,20 @@ const Chat = () => {
     >
       <View style={styles.chatView}>
         <View style={styles.chatTop}>
-          <View style={{ width: "10%" }}>
-            <AntDesign name="left" size={33} color="white" />
-          </View>
+          <Pressable
+            style={({ pressed }) => [
+              { opacity: pressed ? 0.5 : 1, width: "10%" },
+            ]}
+            onPress={navigateBack}
+          >
+            <View style={{ width: "100%" }}>
+              <AntDesign name="left" size={33} color="white" />
+            </View>
+          </Pressable>
           <View style={styles.chatDp}>
             <Image
               source={{
-                uri: "https://i.pinimg.com/736x/f4/1a/13/f41a13df2d4223576900d55a456093d4.jpg",
+                uri: "https://avatars.githubusercontent.com/u/99876741?s=400&u=85779b613746610d52f094672a66566f37aca024&v=4",
               }}
               style={{
                 width: "70%",
