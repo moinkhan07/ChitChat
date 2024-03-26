@@ -13,7 +13,8 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 
-const Chat = () => {
+const Chat = ({ route }) => {
+  const { chatData } = route.params;
   const navigation = useNavigation();
   const navigateBack = () => {
     navigation.navigate("Chats");
@@ -53,9 +54,7 @@ const Chat = () => {
           </Pressable>
           <View style={styles.chatDp}>
             <Image
-              source={{
-                uri: "https://avatars.githubusercontent.com/u/99876741?s=400&u=85779b613746610d52f094672a66566f37aca024&v=4",
-              }}
+              source={{ uri: chatData.imageUri }}
               style={{
                 width: "70%",
                 height: "70%",
@@ -71,7 +70,7 @@ const Chat = () => {
                 fontWeight: "600",
               }}
             >
-              {name.substring(0, 12)}
+              {chatData.name.substring(0, 12)}
             </Text>
             <Text style={{ color: "#E5E4E2", fontSize: 10 }}>online</Text>
           </View>

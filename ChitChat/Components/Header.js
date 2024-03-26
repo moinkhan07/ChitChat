@@ -1,14 +1,42 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Modal,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
-import { Feather, Entypo } from "@expo/vector-icons";
+import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
+import { TextInput } from "react-native-gesture-handler";
 
 const Header = ({ navigation }) => {
   const [selectedOption, setSelectedOption] = useState("Chats");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showLoadingModal, setShowLoadingModal] = useState(false);
 
   const handleOptionChange = (option) => {
     setSelectedOption(option);
     navigation.navigate(option);
   };
+
+  const handleSyncIconPress = () => {
+    setShowLoadingModal(true);
+    // Perform sync operation here
+    setTimeout(() => {
+      setShowLoadingModal(false);
+    }, 3000); // Mocking a loading time of 3 seconds
+  };
+
+  const dropdownOptions = [
+    { label: "Profile", action: () => Alert.alert("Go to Profile") },
+    {
+      label: "Security & Privacy",
+      action: () => Alert.alert("Privacy Settings"),
+    },
+    { label: "Logout", action: () => Alert.alert("Logout") },
+  ];
   return (
     <View style={styles.mainView}>
       <View style={styles.mainHeader}>
@@ -19,18 +47,85 @@ const Header = ({ navigation }) => {
           </Text>
         </View>
         <View style={styles.iconsView}>
-          <Pressable style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}>
+          <Pressable
+            onPress={handleSyncIconPress}
+            style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
+          >
             <View style={styles.icons}>
-              <Feather name="search" size={22} color="#E5E4E2" />
+              <AntDesign name="sync" size={22} color="#E5E4E2" />
             </View>
           </Pressable>
-          <Pressable style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}>
+          <Pressable
+            onPress={() => setShowDropdown(true)}
+            style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
+          >
             <View style={styles.icons}>
               <Entypo name="dots-three-vertical" size={22} color="#E5E4E2" />
             </View>
           </Pressable>
         </View>
       </View>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={showLoadingModal}
+        onRequestClose={() => setShowLoadingModal(false)}
+      >
+        <View style={styles.loadingModal}>
+          <ActivityIndicator size="large" color="white" />
+        </View>
+      </Modal>
+
+      {/* Dropdown menu */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={showDropdown}
+        onRequestClose={() => setShowDropdown(false)}
+      >
+        <Pressable
+          style={styles.dropdownBackground}
+          onPress={() => setShowDropdown(false)}
+        >
+          <View style={styles.dropdown}>
+            {dropdownOptions.map((option, index) => (
+              <Pressable
+                key={index}
+                onPress={() => {
+                  option.action();
+                  setShowDropdown(false);
+                }}
+                style={({ pressed }) => [
+                  {
+                    opacity: pressed ? 0.6 : 1,
+                    borderBottomColor: "grey",
+                    borderBottomWidth: 0.3,
+                  },
+                ]}
+              >
+                <Text style={styles.dropdownItem}>{option.label}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </Pressable>
+      </Modal>
+
+      <View style={styles.searchContainer}>
+        <TextInput
+          placeholderTextColor={"white"}
+          placeholder={"Search username"}
+          style={styles.chatSearch}
+          selectionColor={"white"}
+        />
+        <Feather
+          name="search"
+          size={25}
+          color="#E5E4E2"
+          style={styles.searchIcon}
+        />
+      </View>
+
       <View style={styles.options}>
         <Pressable
           style={({ pressed }) => [
@@ -114,6 +209,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  searchIcon: {
+    width: 42,
+    height: 42,
+    borderColor: "#E5E4E2",
+    borderRadius: "50%",
+    borderWidth: 2,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   iconsView: {
     width: "27%",
     height: "100%",
@@ -143,6 +247,57 @@ const styles = StyleSheet.create({
   selectorText: {
     color: "#3578C1",
     fontSize: 16,
+  },
+  chatSearch: {
+    width: "94%",
+    height: 45,
+    borderColor: "white",
+    borderWidth: 0.3,
+    borderRadius: 10,
+    paddingLeft: 10,
+    paddingRight: 50,
+    color: "white",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    position: "relative",
+  },
+  searchIcon: {
+    position: "absolute",
+    right: 15,
+  },
+  dropdownBackground: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    paddingTop: 100,
+    alignItems: "center",
+  },
+  dropdown: {
+    backgroundColor: "white",
+    width: "94%",
+    borderRadius: 10,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  dropdownItem: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    color: "#3578C1",
+    textAlign: "center",
+  },
+  loadingModal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
 });
 

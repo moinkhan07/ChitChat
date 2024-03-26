@@ -5,15 +5,55 @@ import {
   TextInput,
   Pressable,
   Image,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { useNavigation } from "@react-navigation/native";
 
 const Register = () => {
   const navigation = useNavigation();
+  const [registerCredentials, setRegisterCredentials] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmpassword: "",
+  });
 
   const handleRegister = () => {
+    const { username, email, password, confirmpassword } = registerCredentials;
+
+    // Checking if any field is empty
+    if (!username || !email || !password || !confirmpassword) {
+      Alert.alert("Error", "Please fill in all fields.");
+      return;
+    }
+
+    // Check if the email is in correct format
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      Alert.alert("Error", "Please enter a valid email address.");
+      return;
+    }
+
+    // Check if the password and confirm password match
+    if (password !== confirmpassword) {
+      Alert.alert("Error", "Passwords do not match.");
+      return;
+    }
+
+    // Check if the password meets the strength criteria
+    const passwordPattern =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordPattern.test(password)) {
+      Alert.alert(
+        "Error",
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+      );
+      return;
+    }
+
+    // If all the validations are passed then we navigate to the Login screen
     navigation.navigate("Login");
   };
   const handleNavigateToLogin = () => {
@@ -28,24 +68,39 @@ const Register = () => {
           placeholder={"UserName"}
           style={styles.registerTextInput}
           selectionColor={"white"}
+          onChangeText={(text) =>
+            setRegisterCredentials({ ...registerCredentials, username: text })
+          }
         />
         <TextInput
           placeholderTextColor={"white"}
           placeholder={"Email"}
           style={styles.registerTextInput}
           selectionColor={"white"}
+          onChangeText={(text) =>
+            setRegisterCredentials({ ...registerCredentials, email: text })
+          }
         />
         <TextInput
           placeholderTextColor={"white"}
           placeholder={"Password"}
           style={styles.registerTextInput}
           selectionColor={"white"}
+          onChangeText={(text) =>
+            setRegisterCredentials({ ...registerCredentials, password: text })
+          }
         />
         <TextInput
           placeholderTextColor={"white"}
           placeholder={"Confirm Password"}
           style={styles.registerTextInput}
           selectionColor={"white"}
+          onChangeText={(text) =>
+            setRegisterCredentials({
+              ...registerCredentials,
+              confirmpassword: text,
+            })
+          }
         />
         <Pressable
           style={({ pressed }) => [
