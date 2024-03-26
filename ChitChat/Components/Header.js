@@ -6,15 +6,24 @@ import {
   Modal,
   Alert,
   ActivityIndicator,
+  TextInput,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
-import { Feather, Entypo, AntDesign } from "@expo/vector-icons";
-import { TextInput } from "react-native-gesture-handler";
+import {
+  Feather,
+  Entypo,
+  AntDesign,
+  Ionicons,
+  FontAwesome,
+} from "@expo/vector-icons";
 
 const Header = ({ navigation }) => {
   const [selectedOption, setSelectedOption] = useState("Chats");
   const [showDropdown, setShowDropdown] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
+  const [showSearchModal, setShowSearchModal] = useState(false);
+  const [addUserRequest, setAddUserRequest] = useState(false);
 
   const handleOptionChange = (option) => {
     setSelectedOption(option);
@@ -23,10 +32,20 @@ const Header = ({ navigation }) => {
 
   const handleSyncIconPress = () => {
     setShowLoadingModal(true);
-    // Perform sync operation here
     setTimeout(() => {
       setShowLoadingModal(false);
-    }, 3000); // Mocking a loading time of 3 seconds
+    }, 3000);
+  };
+
+  const toggleSearchModal = () => {
+    setShowSearchModal(!showSearchModal);
+  };
+
+  const userAddRequest = () => {
+    if (addUserRequest) {
+      Alert.alert("Request Sended Already!");
+    }
+    setAddUserRequest(true);
   };
 
   const dropdownOptions = [
@@ -49,7 +68,7 @@ const Header = ({ navigation }) => {
         <View style={styles.iconsView}>
           <Pressable
             onPress={handleSyncIconPress}
-            style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
+            style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}
           >
             <View style={styles.icons}>
               <AntDesign name="sync" size={22} color="#E5E4E2" />
@@ -57,7 +76,7 @@ const Header = ({ navigation }) => {
           </Pressable>
           <Pressable
             onPress={() => setShowDropdown(true)}
-            style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
+            style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}
           >
             <View style={styles.icons}>
               <Entypo name="dots-three-vertical" size={22} color="#E5E4E2" />
@@ -111,6 +130,72 @@ const Header = ({ navigation }) => {
         </Pressable>
       </Modal>
 
+      {/* Search modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={showSearchModal}
+        onRequestClose={() => {}}
+      >
+        <Pressable
+          style={styles.userSearchBackground}
+          onPress={() => setShowSearchModal(false)}
+        >
+          <View style={styles.searchModalContainer}>
+            <View style={styles.searchUserData}>
+              <View style={styles.chatDp}>
+                <Image
+                  source={{
+                    uri: "https://avatars.githubusercontent.com/u/99876741?s=400&u=85779b613746610d52f094672a66566f37aca024&v=4",
+                  }}
+                  style={{
+                    width: "70%",
+                    height: "70%",
+                    borderRadius: 50,
+                  }}
+                />
+              </View>
+              <View style={styles.chatName}>
+                <Text
+                  style={{
+                    color: "#3578C1",
+                    fontSize: 15,
+                    fontWeight: "600",
+                  }}
+                >
+                  @moinkhan07
+                </Text>
+              </View>
+
+              <Pressable
+                style={({ pressed }) => [
+                  {
+                    width: "22%",
+                    height: "100%",
+                    opacity: pressed ? 0.5 : 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  },
+                ]}
+                onPress={userAddRequest}
+              >
+                <View
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  {addUserRequest ? (
+                    <FontAwesome name="send" size={25} color="#3578C1" />
+                  ) : (
+                    <Ionicons name="person-add" size={25} color="#3578C1" />
+                  )}
+                </View>
+              </Pressable>
+            </View>
+          </View>
+        </Pressable>
+      </Modal>
+
       <View style={styles.searchContainer}>
         <TextInput
           placeholderTextColor={"white"}
@@ -118,12 +203,22 @@ const Header = ({ navigation }) => {
           style={styles.chatSearch}
           selectionColor={"white"}
         />
-        <Feather
-          name="search"
-          size={25}
-          color="#E5E4E2"
-          style={styles.searchIcon}
-        />
+        <Pressable
+          onPress={toggleSearchModal}
+          style={({ pressed }) => [
+            {
+              opacity: pressed ? 0.5 : 1,
+              justifyContent: "center",
+            },
+          ]}
+        >
+          <Feather
+            name={showSearchModal ? "x" : "search"}
+            size={25}
+            color="#E5E4E2"
+            style={styles.searchIcon}
+          />
+        </Pressable>
       </View>
 
       <View style={styles.options}>
@@ -201,15 +296,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   icons: {
-    width: 42,
-    height: 42,
-    borderColor: "#E5E4E2",
-    borderRadius: "50%",
-    borderWidth: 2,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  searchIcon: {
     width: 42,
     height: 42,
     borderColor: "#E5E4E2",
@@ -298,6 +384,37 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  userSearchBackground: {
+    flex: 1,
+    paddingTop: 155,
+    alignItems: "center",
+  },
+  searchModalContainer: {
+    backgroundColor: "#E5E4E2",
+    width: "94%",
+    borderRadius: 5,
+  },
+  searchUserData: {
+    width: "100%",
+    height: 60,
+    borderBottomColor: "#E5E4E2",
+    borderBottomWidth: 0.3,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 2,
+  },
+  chatDp: {
+    width: "20%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  chatName: {
+    width: "70%",
+    height: "100%",
+    justifyContent: "center",
   },
 });
 

@@ -17,14 +17,22 @@ const Chats = () => {
   const chatsData = [
     {
       id: 1,
-      name: "Moin Khan",
-      message: "Kya haal hai bhai bahut din ho gaye mile kab mil rahe ho",
+      name: "Self",
+      message: "1.Java 2.Python 3.Kotlin 4.React Native",
       time: "7:24 PM",
       imageUri:
         "https://avatars.githubusercontent.com/u/99876741?s=400&u=85779b613746610d52f094672a66566f37aca024&v=4",
     },
     {
       id: 2,
+      name: "Vivek Bhai",
+      message: "Kya haal hai bhai bahut din ho gaye mile kab mil rahe ho",
+      time: "9:10 AM",
+      imageUri:
+        "https://media.licdn.com/dms/image/D4D03AQF0YM9bwQTYaA/profile-displayphoto-shrink_100_100/0/1705560710420?e=1717027200&v=beta&t=6kjxGwhcMEafMKcoq-MWZ1inalKviO9Wu--zPBY_Omk",
+    },
+    {
+      id: 3,
       name: "Sharukh Bhai",
       message: "Send me all the java and mysql notes",
       time: "11:24 AM",
@@ -32,7 +40,7 @@ const Chats = () => {
         "https://media.licdn.com/dms/image/D4E03AQE9Sm6S6vGnpg/profile-displayphoto-shrink_800_800/0/1676718733901?e=1717027200&v=beta&t=5oQYSqtRAp4j1DUILczmHgiFBcvumB0GjkR0h3JwI80",
     },
     {
-      id: 3,
+      id: 4,
       name: "Tanveer Bhai",
       message: "Let's meet today at 8 pm at bandra fort",
       time: "4:12 PM",

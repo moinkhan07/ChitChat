@@ -16,15 +16,21 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const uEmail = "Ok";
-  const pass = "Ok";
+  const uEmail = "Admin";
+  const pass = "Admin";
 
   const handleLogin = () => {
-    if (loginCredentials.email === uEmail && loginCredentials.password === pass) {
+    if (
+      loginCredentials.email === uEmail &&
+      loginCredentials.password === pass
+    ) {
       navigation.navigate("MainStackScreen");
-    }else if(loginCredentials.email === "" || loginCredentials.password === ""){
+    } else if (
+      loginCredentials.email === "" ||
+      loginCredentials.password === ""
+    ) {
       Alert.alert("Error", "Please fill in all fields.");
-    }else {
+    } else {
       Alert.alert("Error", "Email or password is incorrect!");
     }
   };
@@ -40,14 +46,18 @@ const Login = () => {
           placeholder={"Email"}
           style={styles.loginTextInput}
           selectionColor={"white"}
-          onChangeText={(text) => setLoginCredentials({...loginCredentials, email: text})}
+          onChangeText={(text) =>
+            setLoginCredentials({ ...loginCredentials, email: text })
+          }
         />
         <TextInput
           placeholderTextColor={"white"}
           placeholder={"Password"}
           style={styles.loginTextInput}
           selectionColor={"white"}
-          onChangeText={(text) => setLoginCredentials({...loginCredentials, password: text})}
+          onChangeText={(text) =>
+            setLoginCredentials({ ...loginCredentials, password: text })
+          }
         />
         <Pressable
           style={({ pressed }) => [
