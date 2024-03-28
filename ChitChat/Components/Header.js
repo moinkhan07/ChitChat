@@ -172,10 +172,14 @@ const Header = ({ navigation }) => {
   };
 
   const dropdownOptions = [
-    { label: "Profile", action: () => Alert.alert("Go to Profile") },
+    { label: "Profile", action: () => navigation.navigate("Profile") },
+    {
+      label: "Connection Requests",
+      action: () => navigation.navigate("Connections"),
+    },
     {
       label: "Security & Privacy",
-      action: () => Alert.alert("Privacy Settings"),
+      action: () => navigation.navigate("Setting")
     },
     { label: "Logout", action: () => Alert.alert("Logout") },
   ];

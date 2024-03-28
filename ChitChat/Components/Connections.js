@@ -3,13 +3,13 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 
-const Profile = () => {
+const Connections = () => {
   const navigation = useNavigation();
   const navigateBack = () => {
     navigation.navigate("Chats");
   };
   return (
-    <View style={styles.profile}>
+    <View style={styles.connections}>
       <View
         style={{
           width: "100%",
@@ -39,19 +39,19 @@ const Profile = () => {
           fontSize: 25,
         }}
       >
-        Profile Component
+        Connections Component
       </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  profile: {
+  connections: {
     flex: 1,
-    paddingTop: 35,
     alignItems: "center",
+    paddingTop: 35,
     backgroundColor: "#3578C1",
   },
 });
 
-export default Profile;
+export default Connections;

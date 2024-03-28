@@ -6,6 +6,9 @@ import Chats from "./Components/Chats";
 import Chat from "./Components/Chat";
 import Groups from "./Components/Groups";
 import Status from "./Components/Status";
+import Profile from "./Components/Profile";
+import Connections from "./Components/Connections";
+import Setting from "./Components/Setting";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -35,6 +38,21 @@ function MainStackSreen() {
       <Stack.Screen
         name="Chat"
         component={Chat}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={Profile}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Connections"
+        component={Connections}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Setting"
+        component={Setting}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
