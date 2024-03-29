@@ -7,8 +7,9 @@ import {
   Image,
   Alert,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-
+import React, { useState } from "react";
+import firebaseApp from "../firebaseConfig";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 
 const Register = () => {
@@ -20,7 +21,7 @@ const Register = () => {
     confirmpassword: "",
   });
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const { username, email, password, confirmpassword } = registerCredentials;
 
     // Checking if any field is empty
@@ -53,8 +54,21 @@ const Register = () => {
       return;
     }
 
-    // If all the validations are passed then we navigate to the Login screen
-    navigation.navigate("Login");
+    const lowerCaseUsername = username.toLowerCase();
+    const lowerCaseEmail = email.toLowerCase();
+
+    try {
+      const db = getFirestore(firebaseApp);
+      const userRef = collection(db, "users");
+      await addDoc(userRef, {
+        username: lowerCaseUsername,
+        email: lowerCaseEmail,
+        password,
+      });
+      navigation.navigate("Login");
+    } catch (error) {
+      Alert.alert("Error", "Failed to register. Please try again.");
+    }
   };
   const handleNavigateToLogin = () => {
     navigation.navigate("Login");
