@@ -10,11 +10,13 @@ import {
 import React, { useState } from "react";
 import firebaseApp from "../firebaseConfig";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 
 const Register = () => {
   const navigation = useNavigation();
   const [registerCredentials, setRegisterCredentials] = useState({
+    name: "",
     username: "",
     email: "",
     password: "",
@@ -22,10 +24,11 @@ const Register = () => {
   });
 
   const handleRegister = async () => {
-    const { username, email, password, confirmpassword } = registerCredentials;
+    const { name, username, email, password, confirmpassword } =
+      registerCredentials;
 
     // Checking if any field is empty
-    if (!username || !email || !password || !confirmpassword) {
+    if (!name || !username || !email || !password || !confirmpassword) {
       Alert.alert("Error", "Please fill in all fields.");
       return;
     }
@@ -57,17 +60,27 @@ const Register = () => {
     const lowerCaseUsername = username.toLowerCase();
     const lowerCaseEmail = email.toLowerCase();
 
+    const auth = getAuth(firebaseApp);
+
     try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
       const db = getFirestore(firebaseApp);
       const userRef = collection(db, "users");
       await addDoc(userRef, {
+        name,
         username: lowerCaseUsername,
         email: lowerCaseEmail,
-        password,
+        uid: userCredential.user.uid,
       });
       navigation.navigate("Login");
     } catch (error) {
-      Alert.alert("Error", "Failed to register. Please try again.");
+      Alert.alert("Error", error.message);
+      // Alert.alert("Error", "Failed to register. Please try again.");
     }
   };
   const handleNavigateToLogin = () => {
@@ -77,6 +90,15 @@ const Register = () => {
     <View style={styles.registerMain}>
       <Image style={styles.logo} source={require("../assets/icon.png")} />
       <View style={styles.registerInputsView}>
+        <TextInput
+          placeholderTextColor={"white"}
+          placeholder={"Full Name"}
+          style={styles.registerTextInput}
+          selectionColor={"white"}
+          onChangeText={(text) =>
+            setRegisterCredentials({ ...registerCredentials, name: text })
+          }
+        />
         <TextInput
           placeholderTextColor={"white"}
           placeholder={"UserName"}

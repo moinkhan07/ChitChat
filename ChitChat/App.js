@@ -27,7 +27,7 @@ function MainTabScreen() {
   );
 }
 
-function MainStackSreen() {
+function MainStackScreen() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -66,7 +66,7 @@ export default function App() {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Register" component={Register} />
-          <Stack.Screen name="MainStackScreen" component={MainStackSreen} />
+          <Stack.Screen name="MainStackScreen" component={MainStackScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

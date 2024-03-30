@@ -7,8 +7,10 @@ import {
   Image,
   Alert,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import firebaseApp from "../firebaseConfig";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
   const navigation = useNavigation();
@@ -16,24 +18,20 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const uEmail = "Admin";
-  const pass = "Admin";
 
-  const handleLogin = () => {
-    if (
-      loginCredentials.email === uEmail &&
-      loginCredentials.password === pass
-    ) {
+  const handleLogin = async () => {
+    const { email, password } = loginCredentials;
+
+    try {
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       navigation.navigate("MainStackScreen");
-    } else if (
-      loginCredentials.email === "" ||
-      loginCredentials.password === ""
-    ) {
-      Alert.alert("Error", "Please fill in all fields.");
-    } else {
-      Alert.alert("Error", "Email or password is incorrect!");
+    } catch (error) {
+      // Alert.alert("Error", "Email or password is incorrect!");
+      Alert.alert("Error", error.message);
     }
   };
+
   const handleNavigateToRegister = () => {
     navigation.navigate("Register");
   };
