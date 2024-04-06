@@ -10,7 +10,7 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Feather,
   Entypo,
@@ -18,6 +18,7 @@ import {
   Ionicons,
   FontAwesome,
 } from "@expo/vector-icons";
+import { firebase } from "../firebaseConfig";
 
 const Header = ({ navigation }) => {
   const [selectedOption, setSelectedOption] = useState("Chats");
@@ -29,6 +30,22 @@ const Header = ({ navigation }) => {
   );
   const [searchText, setSearchText] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const [loggedInUser, setLoggedInUser] = useState("");
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.exists) {
+          setLoggedInUser(snapshot.data());
+        } else {
+          Alert.alert("User does not exist!");
+        }
+      });
+  }, []);
 
   const dummyUserData = [
     {
@@ -179,9 +196,9 @@ const Header = ({ navigation }) => {
     },
     {
       label: "Security & Privacy",
-      action: () => navigation.navigate("Setting")
+      action: () => navigation.navigate("Setting"),
     },
-    { label: "Logout", action: () => Alert.alert("Logout") },
+    { label: "Logout", action: () => firebase.auth().signOut() },
   ];
   return (
     <View style={styles.mainView}>
@@ -189,7 +206,7 @@ const Header = ({ navigation }) => {
         <View>
           <Text style={{ color: "#E5E4E2" }}>Hello,</Text>
           <Text style={{ color: "white", fontSize: 25, fontWeight: "600" }}>
-            MoinKhan07
+            {loggedInUser ? loggedInUser.name : "Guest"}
           </Text>
         </View>
         <View style={styles.iconsView}>

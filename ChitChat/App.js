@@ -9,6 +9,9 @@ import Status from "./Components/Status";
 import Profile from "./Components/Profile";
 import Connections from "./Components/Connections";
 import Setting from "./Components/Setting";
+import React, { useState, useEffect } from "react";
+
+import { firebase } from "./firebaseConfig";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -60,17 +63,47 @@ function MainStackScreen() {
 }
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Register" component={Register} />
-          <Stack.Screen name="MainStackScreen" component={MainStackScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </View>
-  );
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState(null);
+
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) {
+      setInitializing(false);
+    }
+  }
+
+  useEffect(() => {
+    const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
+
+  if (initializing) {
+    return null;
+  }
+
+  if (user === null) {
+    return (
+      <View style={styles.container}>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Register" component={Register} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </View>
+    );
+  } else {
+    return (
+      <View style={styles.container}>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="MainStackScreen" component={MainStackScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

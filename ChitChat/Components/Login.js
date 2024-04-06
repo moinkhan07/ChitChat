@@ -9,8 +9,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import firebaseApp from "../firebaseConfig";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { firebase } from "../firebaseConfig";
 
 const Login = () => {
   const navigation = useNavigation();
@@ -23,12 +22,9 @@ const Login = () => {
     const { email, password } = loginCredentials;
 
     try {
-      const auth = getAuth();
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      navigation.navigate("MainStackScreen");
+      await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch (error) {
-      // Alert.alert("Error", "Email or password is incorrect!");
-      Alert.alert("Error", error.message);
+      Alert.alert("Error", "Email or password is incorrect!");
     }
   };
 

@@ -8,9 +8,7 @@ import {
   Alert,
 } from "react-native";
 import React, { useState } from "react";
-import firebaseApp from "../firebaseConfig";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { firebase } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 
 const Register = () => {
@@ -60,27 +58,23 @@ const Register = () => {
     const lowerCaseUsername = username.toLowerCase();
     const lowerCaseEmail = email.toLowerCase();
 
-    const auth = getAuth(firebaseApp);
-
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      const db = getFirestore(firebaseApp);
-      const userRef = collection(db, "users");
-      await addDoc(userRef, {
-        name,
-        username: lowerCaseUsername,
-        email: lowerCaseEmail,
-        uid: userCredential.user.uid,
-      });
-      navigation.navigate("Login");
+      await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(firebase.auth().currentUser.uid)
+            .set({
+              name,
+              username: lowerCaseUsername,
+              email: lowerCaseEmail,
+            });
+        });
     } catch (error) {
-      Alert.alert("Error", error.message);
-      // Alert.alert("Error", "Failed to register. Please try again.");
+      Alert.alert("Error", "Failed to register. Please try again.");
     }
   };
   const handleNavigateToLogin = () => {
