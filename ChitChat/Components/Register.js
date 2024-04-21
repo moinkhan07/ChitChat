@@ -19,10 +19,11 @@ const Register = () => {
     email: "",
     password: "",
     confirmpassword: "",
+    imageUri: "https://cdn-icons-png.flaticon.com/512/666/666201.png",
   });
 
   const handleRegister = async () => {
-    const { name, username, email, password, confirmpassword } =
+    const { name, username, email, password, confirmpassword, imageUri } =
       registerCredentials;
 
     // Checking if any field is empty
@@ -68,9 +69,11 @@ const Register = () => {
             .collection("users")
             .doc(firebase.auth().currentUser.uid)
             .set({
+              userId: firebase.auth().currentUser.uid,
               name,
               username: lowerCaseUsername,
               email: lowerCaseEmail,
+              imageUri,
             });
         });
     } catch (error) {
@@ -177,7 +180,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: "white",
     borderWidth: 0.3,
-    marginVertical: 10,
+    marginVertical: 4,
     borderRadius: 15,
     paddingLeft: 10,
     color: "white",

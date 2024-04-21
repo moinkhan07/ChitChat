@@ -8,32 +8,78 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
+import { getRoomId } from "../utils/common";
+import { firebase } from "../firebaseConfig";
+import MessageList from "./MessageList";
 
 const Chat = ({ route }) => {
   const { chatData } = route.params;
+
   const navigation = useNavigation();
   const navigateBack = () => {
     navigation.navigate("Chats");
   };
-  const name = "Moin Khan";
-  const messages = [
-    { text: "Hello!", sender: true },
-    { text: "Hi there!", sender: false },
-    { text: "How are you?", sender: true },
-    {
-      text: "I'm good, thank you.I'm good, thank you.I'm good, thank you.",
-      sender: false,
-    },
-    { text: "How are you?", sender: false },
-    {
-      text: "I'm good, thank you.I'm good, thank you.I'm good, thank you.",
-      sender: true,
-    },
-  ];
+
+  const [messages, setMessages] = useState([]);
+  const textRef = useRef("");
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    createRoomIfNotExists();
+    let roomId = getRoomId(firebase.auth().currentUser.uid, chatData.userId);
+    const db = firebase.firestore();
+    const docRef = db.collection("rooms").doc(roomId);
+    const messageRef = docRef.collection("messages");
+    const q = messageRef.orderBy("createdAt", "asc");
+
+    const unSub = q.onSnapshot((snapshot) => {
+      let allMessages = snapshot.docs.map((doc) => {
+        return doc.data();
+      });
+      setMessages([...allMessages]);
+    });
+
+    return unSub;
+  }, []);
+
+  const createRoomIfNotExists = async () => {
+    let roomId = getRoomId(firebase.auth().currentUser.uid, chatData.userId);
+    const db = firebase.firestore();
+    const roomsRef = db.collection("rooms");
+    await roomsRef.doc(roomId).set({
+      roomId,
+      createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+    });
+  };
+
+  const handleSendMessage = async () => {
+    let message = textRef.current.trim();
+    if (!message) return;
+    try {
+      const roomId = getRoomId(
+        firebase.auth().currentUser.uid,
+        chatData.userId
+      );
+      const db = firebase.firestore();
+      const docRef = db.collection("rooms").doc(roomId);
+      const messageRef = docRef.collection("messages");
+      textRef.current = "";
+      if (inputRef) inputRef?.current?.clear();
+      const newDoc = await messageRef.add({
+        userId: firebase.auth().currentUser.uid,
+        text: message,
+        createdAt: firebase.firestore.Timestamp.now(),
+      });
+    } catch (error) {
+      Alert.alert("Message", error.message);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -87,26 +133,7 @@ const Chat = ({ route }) => {
           </View>
         </View>
 
-        <ScrollView style={styles.chatMessages}>
-          {messages.map((message, index) => (
-            <View
-              key={index}
-              style={[
-                styles.messageContainer,
-                message.sender ? styles.senderMessage : styles.receiverMessage,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.messageText,
-                  { color: message.sender ? "#3578C1" : "white" },
-                ]}
-              >
-                {message.text}
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
+        <MessageList messages={messages} />
 
         <View style={styles.chatInput}>
           <View style={{ width: "8%" }}>
@@ -114,6 +141,8 @@ const Chat = ({ route }) => {
           </View>
           <View style={{ width: "58%" }}>
             <TextInput
+              ref={inputRef}
+              onChangeText={(value) => (textRef.current = value)}
               style={styles.inputMessage}
               placeholderTextColor="white"
               selectionColor={"white"}
@@ -130,7 +159,12 @@ const Chat = ({ route }) => {
           >
             <Feather name="camera" size={24} color="white" />
             <Feather name="mic" size={24} color="white" />
-            <Ionicons name="send" size={24} color="white" />
+            <Pressable
+              onPress={handleSendMessage}
+              style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
+            >
+              <Ionicons name="send" size={24} color="white" />
+            </Pressable>
           </View>
         </View>
       </View>
@@ -154,32 +188,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 10,
-  },
-  chatMessages: {
-    flex: 1,
-    paddingHorizontal: 10,
-  },
-  messageContainer: {
-    maxWidth: "60%",
-    marginVertical: 5,
-    padding: 8,
-  },
-  senderMessage: {
-    alignSelf: "flex-end",
-    backgroundColor: "white",
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  receiverMessage: {
-    alignSelf: "flex-start",
-    backgroundColor: "#62abfc",
-    borderTopRightRadius: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  messageText: {
-    fontSize: 16,
   },
   chatInput: {
     width: "100%",
