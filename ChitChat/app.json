@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#E5E4E2"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -19,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.moinkhan07.ChitChat"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "cb4b4b89-c83e-46d5-88ed-e4776e91871c"
+      }
     }
   }
 }
